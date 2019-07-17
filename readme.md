@@ -239,3 +239,66 @@ It is also possible to put an element at a particular index in a tuple with put_
     {:ok, "hello"}
 
 Notice that `put_elem/3` returned a new tuple. The original tuple stored in the tuple variable was not modified. Like lists, _**tuples are also immutable**_. _**Every operation on a tuple returns a new tuple**_, it never changes the given one.
+
+## Keyword lists
+A list of tuples and the first item of the tuple (i.e. the key) is an atom, we call it a keyword list:
+
+    iex> list = [{:a, 1}, {:b, 2}]
+    [a: 1, b: 2]
+    iex> list == [a: 1, b: 2]
+    true
+    iex> list[:a]  # access via key/atom
+    1
+    iex> list[:b]  # access via key/atom
+    2
+
+A special syntax for defining such lists: `[key: value]`. For example, the following is a keyword list:
+
+    [{:exit_on_close, true}, {:active, :once}, {:packet_size, 1024}]
+
+The special and more concise syntax for keyword lists that looks like this:
+
+    [exit_on_close: true, active: :once, packet_size: 1024]
+
+
+
+Keyword lists are important because they have three special characteristics:
+
+* Keys must be atoms.
+* Keys are ordered, as specified by the developer.
+* Keys can be given more than once.
+
+**Keyword lists to be the default mechanism for passing options to functions in Elixir.**
+
+    iex> if false, do: :this, else: :that
+    :that
+
+The `do:` and `else:` pairs are keyword lists! In fact, the call above is equivalent to:
+
+    iex> if(false, [do: :this, else: :that])
+    :that
+Which, as we have seen above, is the same as:
+
+    iex> if(false, [{:do, :this}, {:else, :that}])
+    :that
+
+In general, when the keyword list is the _last argument of a function_, the square brackets are optional.
+
+See more details in [Keyword lists](https://hexdocs.pm/elixir/Keyword.html).
+
+## Map
+A map is created using the %{} syntax:
+
+    iex> map = %{:a => 1, 2 => :b}
+    %{2 => :b, :a => 1}
+    iex> map[:a]
+    1
+    iex> map[2]
+    :b
+    iex> map[:c]
+    nil
+
+Compared to keyword lists, we can already see two differences:
+
+* Maps allow any value as a key.
+* Maps’ keys do not follow any ordering.
