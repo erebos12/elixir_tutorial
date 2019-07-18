@@ -301,4 +301,97 @@ A map is created using the %{} syntax:
 Compared to keyword lists, we can already see two differences:
 
 * Maps allow any value as a key.
-* Maps’ keys do not follow any ordering.
+* Maps keys do not follow any ordering.
+* Maps do not allow duplicated keys.
+
+More on maps, see [Map module](https://hexdocs.pm/elixir/Map.html)
+
+
+## Functions and Modules
+
+### Compilation mode
+
+Assume file `math.ex` with following code:
+
+    defmodule Math do
+      def sum(a, b) do
+        a + b
+      end
+    end
+
+Compile it by using `elixirc`:
+
+    $ elixirc math.ex
+
+I will create a file named `Elixir.Math.beam` containing the bytecode for the defined module.
+You can use this module in `iex` console like this:
+
+    iex> Math.sum(1, 2)
+    3
+
+### Scripted mode
+
+Elixir also supports .exs files for scripting. No beam-files/bytecode will be created.
+Executing by `elixir` in common terminal:
+
+    $ elixir math.exs
+
+
+### Named function
+
+Inside a module, _we can define (public) functions with def/2 and private functions with defp/2_.
+
+    defmodule Math do
+      def sum(a, b) do
+        do_sum(a, b)
+      end
+
+      defp do_sum(a, b) do
+        a + b
+      end
+    end
+
+    IO.puts Math.sum(1, 2)    #=> 3
+    IO.puts Math.do_sum(1, 2) #=> ** (UndefinedFunctionError)
+
+### Function capturing
+
+By using the capture operator `&` we can assign functions to variables.
+
+    iex> fun = &Math.zero?/1
+    &Math.zero?/1
+    iex> fun.(0)
+    true
+
+We can also create functions with the capture operator:
+
+    iex> fun = &(&1 + 1)
+    #Function<6.71889879/1 in :erl_eval.expr/5>
+    iex> fun.(1)
+    2
+
+The `&1` represents the first argument passed into the function. &(&1 + 1) above is exactly the same as `fn x -> x + 1 ` end.
+
+You can also capture a function from a specific module:
+
+    iex> fun = &List.flatten(&1, &2)
+    &List.flatten/2
+    iex> fun.([1, [[2], 3]], [4, 5])
+    [1, 2, 3, 4, 5]
+
+
+### Default arguments
+
+
+    defmodule DefaultTest do
+      def dowork(x \\ "hello") do
+        x
+      end
+    end
+
+-->
+
+    iex> DefaultTest.dowork
+    "hello"
+    iex> DefaultTest.dowork 123
+    123
