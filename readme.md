@@ -304,6 +304,25 @@ Compared to keyword lists, we can already see two differences:
 * Maps keys do not follow any ordering.
 * Maps do not allow duplicated keys.
 
+When the key in a key-value pair is an atom, the `key:` value shorthand syntax can be used:
+
+`iex> colors = %{primary:  "red", secondary: "green"}`
+
+
+To update an existing key/value pair in a map there are two ways:
+
+**First** option is by `Map.put/3` function:
+
+    iex> colors = %{primary:  "red", secondary: "green"}
+    iex> Map.put(colors, :primary, "yellow")
+    %{primary: "yellow", secondary: "green"}
+
+**Second** option is with pipe operator syntax:
+
+    iex> %{colors| primary: "blue"}
+    %{primary: "blue", secondary: "green"}
+
+To add/insert a new key/value pair you can ONLY use the first option!
 More on maps, see [Map module](https://hexdocs.pm/elixir/Map.html)
 
 
